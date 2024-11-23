@@ -3,10 +3,12 @@ import os
 import sys
 import tempfile
 import shutil
+import subprocess
 
 Preset = collections.namedtuple('Preset', ['collection', 'playbook'])
 
 USERDIR = os.environ['USER_PWD']
+PYTHONBIN = os.environ['PYTHONBIN']
 
 
 def parse_preset():
@@ -21,8 +23,19 @@ def parse_preset():
 
 
 def execute(workspace):
-    print('Listing files:')
-    os.system(f'ls -al {workspace}')
+    ansible = os.path.join(PYTHONBIN, 'ansible-playbook')
+    playbook = os.path.join(workspace, 'playbook.yml')
+
+    rc = subprocess.run(
+        f'{ansible} {playbook}',
+        cwd=workspace,
+        shell=True,
+        stdout=sys.stdout,
+        stderr=sys.stderr,
+        bufsize=1
+    ).returncode
+    print(f'Ansible return code: {rc}')
+
     return 0
 
 
