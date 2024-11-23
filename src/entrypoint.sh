@@ -21,3 +21,6 @@ if $(command -v sed) --version 2>&1 | grep -q 'GNU sed'; then
 else
     find "${PYTHONBIN}" -type f -exec sed -i '' '1s|^#!.*python.*$|#!/usr/bin/env '"$PYTHONBIN"'/python3|' {} \;
 fi
+
+# ensure no pyc files
+export PYTHONDONTWRITEBYTECODE=1
