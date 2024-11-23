@@ -21,4 +21,4 @@ build: # Build binary using Docker
 
 .PHONY: run
 run: build # Run shell in Docker container
-	docker run -it --rm -v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset debian:12 bash
+	docker run -it --rm -v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset debian:12 preset

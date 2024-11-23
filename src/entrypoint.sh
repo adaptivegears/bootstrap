@@ -13,7 +13,7 @@ export PATH
 
 ### environment | python ######################################################
 # ensure isolation
-unset PYTHONPATH
+export PYTHONPATH="${WORKDIR}"
 
 # ensure python3 interpreter
 if $(command -v sed) --version 2>&1 | grep -q 'GNU sed'; then
@@ -26,4 +26,4 @@ fi
 export PYTHONDONTWRITEBYTECODE=1
 
 ### main ######################################################################
-"${PYTHONBIN}/python3" "${WORKDIR}/preset.py" "$@"
+"${PYTHONBIN}/python3" -m preset "$@"

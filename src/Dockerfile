@@ -34,7 +34,7 @@ RUN find python -type d -name "__pycache__" -print | xargs rm -rf
 RUN find python -type d -name "tests" -print | xargs rm -rf
 
 COPY --chmod=0755 --chown=root:root entrypoint.sh .
-COPY preset.py .
+COPY preset preset
 RUN makeself --header "/usr/share/makeself/makeself-header.sh" \
     --gzip --complevel 1 \
     --nomd5 --nocrc \
