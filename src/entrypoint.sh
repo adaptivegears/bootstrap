@@ -24,3 +24,6 @@ fi
 
 # ensure no pyc files
 export PYTHONDONTWRITEBYTECODE=1
+
+### main ######################################################################
+"${PYTHONBIN}/python3" "${WORKDIR}/preset.py" "$@"
