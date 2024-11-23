@@ -22,7 +22,12 @@ ENV PYTHON_ARCH=${PYTHON_ARCH}
 WORKDIR /usr/local/src
 ENV PYTHON="cpython-${PYTHON_VERSION}+${PYTHON_RELEASE}-${PYTHON_ARCH}-unknown-linux-gnu-install_only_stripped.tar.gz"
 RUN curl -fsSLo "${PYTHON}" "https://github.com/indygreg/python-build-standalone/releases/download/${PYTHON_RELEASE}/${PYTHON}"
-RUN mkdir -p python && tar xzf "${PYTHON}" -C python && rm -f "${PYTHON}"
+RUN tar xzf "${PYTHON}" && rm -f "${PYTHON}"
+
+ENV PATH="/usr/local/src/python/bin:${PATH}"
+RUN python -m pip install ansible~="${ANSIBLE_RELEASE}"
+COPY requirements.txt .
+RUN ./python3 -m pip install -r requirements.txt
 
 FROM scratch
 COPY --from=build --chown=root:root --chmod=0755 /usr/local/src/* /
