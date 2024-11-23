@@ -88,9 +88,6 @@ def clone(workspace, collection, playbook):
 
 
 def process(workspace, preset):
-    print(f'Workspace: {workspace}')
-    print(f'Processing: {preset}')
-
     if os.path.isabs(preset.collection):
         collection = preset.collection
     else:
@@ -112,9 +109,6 @@ def process(workspace, preset):
 
     if not os.access(playbook, os.R_OK):
         raise PermissionError(f'Playbook is not readable: {playbook}')
-
-    print(f'Collection: {collection}\n'
-          f'Playbook: {playbook}')
 
     clone(workspace, collection, playbook)
     return execute(workspace)
