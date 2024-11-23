@@ -39,6 +39,20 @@ def execute(workspace):
     return 0
 
 
+def clone(workspace, collection, playbook):
+    shutil.copytree(os.path.join(collection, 'roles'), os.path.join(workspace, 'roles'))
+    shutil.copy2(playbook, os.path.join(workspace, 'playbook.yml'))
+
+    os.makedirs(os.path.join(workspace, 'host_vars'), exist_ok=True)
+    with open(os.path.join(workspace, 'host_vars', 'localhost.yml'), 'w') as f:
+        f.write('---\n')
+        f.write('ansible_connection: local\n')
+        f.write(f'ansible_python_interpreter: {sys.executable}')
+
+    with open(os.path.join(workspace, 'hosts'), 'w') as f:
+        f.write('localhost')
+
+
 def process(workspace, preset):
     print(f'Workspace: {workspace}')
     print(f'Processing: {preset}')
@@ -68,15 +82,7 @@ def process(workspace, preset):
     print(f'Collection: {collection}\n'
           f'Playbook: {playbook}')
 
-    shutil.copytree(os.path.join(collection, 'roles'), os.path.join(workspace, 'roles'))
-    shutil.copy2(playbook, os.path.join(workspace, 'playbook.yml'))
-
-    os.makedirs(os.path.join(workspace, 'host_vars'), exist_ok=True)
-    with open(os.path.join(workspace, 'host_vars', 'localhost.yml'), 'w') as f:
-        f.write('---\n')
-        f.write('ansible_connection: local\n')
-        f.write(f'ansible_python_interpreter: {sys.executable}')
-
+    clone(workspace, collection, playbook)
     return execute(workspace)
 
 
