@@ -20,8 +20,11 @@ def parse_preset():
         raise ValueError('Invalid number of arguments')
 
 
-def execute(workspace, collection, playbook):
-    pass
+def execute(workspace):
+    print('Listing files:')
+    os.system(f'ls -al {workspace}')
+    return 0
+
 
 def process(workspace, preset):
     print(f'Workspace: {workspace}')
@@ -52,9 +55,16 @@ def process(workspace, preset):
     print(f'Collection: {collection}\n'
           f'Playbook: {playbook}')
 
+    shutil.copytree(os.path.join(collection, 'roles'), os.path.join(workspace, 'roles'))
+    shutil.copy2(playbook, os.path.join(workspace, 'playbook.yml'))
 
+    os.makedirs(os.path.join(workspace, 'host_vars'), exist_ok=True)
+    with open(os.path.join(workspace, 'host_vars', 'localhost.yml'), 'w') as f:
+        f.write('---\n')
+        f.write('ansible_connection: local\n')
+        f.write(f'ansible_python_interpreter: {sys.executable}')
 
-    return execute(workspace, collection, playbook)
+    return execute(workspace)
 
 
 def main():
