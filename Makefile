@@ -13,9 +13,14 @@ PYTHON_VERSION ?= 3.11.9
 build: # Build binary using Docker
 	docker buildx build \
 		--platform linux/$(ANSIBLE_ARCH) \
+		--build-arg ANSIBLE_ARCH=$(ANSIBLE_ARCH) \
 		--build-arg ANSIBLE_RELEASE=$(ANSIBLE_RELEASE) \
 		--build-arg PYTHON_ARCH=$(PYTHON_ARCH) \
 		--build-arg PYTHON_RELEASE=$(PYTHON_RELEASE) \
 		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
 		--progress=plain \
 		--output dist src
+
+.PHONY: run
+run: # Run shell in Docker container
+	docker run -it --rm -v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset debian:12 bash

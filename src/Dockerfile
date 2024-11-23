@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM debian:12-slim AS build
+FROM debian:12 AS build
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yq && apt-get install -yq --no-install-recommends \
@@ -7,7 +7,10 @@ RUN apt-get update -yq && apt-get install -yq --no-install-recommends \
     curl \
     makeself
 
-ARG ANSIBLE_RELEASE=10.0
+ARG ANSIBLE_ARCH=amd64
+ENV ANSIBLE_ARCH=${ANSIBLE_ARCH}
+
+ARG ANSIBLE_RELEASE=10.6.0
 ENV ANSIBLE_RELEASE=${ANSIBLE_RELEASE}
 
 ARG PYTHON_RELEASE=20240814
@@ -24,10 +27,30 @@ ENV PYTHON="cpython-${PYTHON_VERSION}+${PYTHON_RELEASE}-${PYTHON_ARCH}-unknown-l
 RUN curl -fsSLo "${PYTHON}" "https://github.com/indygreg/python-build-standalone/releases/download/${PYTHON_RELEASE}/${PYTHON}"
 RUN tar xzf "${PYTHON}" && rm -f "${PYTHON}"
 
-ENV PATH="/usr/local/src/python/bin:${PATH}"
+ENV PYTHONBIN="/usr/local/src/python/bin"
+ENV PATH="${PYTHONBIN}:${PATH}"
 RUN python -m pip install ansible~="${ANSIBLE_RELEASE}"
 COPY requirements.txt .
-RUN ./python3 -m pip install -r requirements.txt
+RUN python -m pip install -r requirements.txt
+# RUN find "${PYTHONBIN}" -type f -exec sed -i '1s|^#!.*python.*$|#!/usr/bin/env python3|' {}
+RUN rm -r python/share
+RUN find python -type d -name "__pycache__" -print | xargs rm -rf
+RUN find python -type d -name "tests" -print | xargs rm -rf
+
+COPY preset.py .
+RUN makeself --header "/usr/share/makeself/makeself-header.sh" \
+    --gzip --complevel 1 \
+    --nomd5 --nocrc \
+    --tar-format gnu \
+    --tar-quietly \
+    --tar-extra '--mtime=2024-01-01' \
+    --packaging-date '2024-01-01T00:00:00Z' \
+    "/usr/local/src/python" \
+    "/usr/local/src/preset-linux-${ANSIBLE_ARCH}" \
+    "Preset (Ansible ${ANSIBLE_RELEASE}, Python ${PYTHON_VERSION})" \
+    ./preset.py
 
 FROM scratch
-COPY --from=build --chown=root:root --chmod=0755 /usr/local/src/* /
+ARG ANSIBLE_ARCH=amd64
+ENV ANSIBLE_ARCH=${ANSIBLE_ARCH}
+COPY --from=build --chown=root:root --chmod=0755 "/usr/local/src/preset-linux-${ANSIBLE_ARCH}" /
