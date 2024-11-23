@@ -23,12 +23,28 @@ def parse_preset():
 
 
 def execute(workspace):
+    if os.path.exists(os.path.join(workspace, 'requirements.yml')):
+        galaxy = os.path.join(PYTHONBIN, 'ansible-galaxy')
+        rc = subprocess.run(
+            f'{galaxy} collection install -r requirements.yml',
+            cwd=workspace,
+            shell=True,
+            stdout=sys.stdout,
+            stderr=sys.stderr,
+            bufsize=1
+        ).returncode
+        if rc != 0:
+            raise RuntimeError('Failed to install collection dependencies')
+
+    os.environ['ANSIBLE_INVENTORY'] = os.path.join(workspace, 'hosts')
+
     ansible = os.path.join(PYTHONBIN, 'ansible-playbook')
     playbook = os.path.join(workspace, 'playbook.yml')
 
     rc = subprocess.run(
         f'{ansible} {playbook}',
         cwd=workspace,
+        env=os.environ,
         shell=True,
         stdout=sys.stdout,
         stderr=sys.stderr,
@@ -40,8 +56,26 @@ def execute(workspace):
 
 
 def clone(workspace, collection, playbook):
-    shutil.copytree(os.path.join(collection, 'roles'), os.path.join(workspace, 'roles'))
-    shutil.copy2(playbook, os.path.join(workspace, 'playbook.yml'))
+    if os.path.exists(playbook):
+        shutil.copy2(playbook, os.path.join(workspace, 'playbook.yml'))
+    else:
+        raise FileNotFoundError(f'Playbook not found: {playbook}')
+
+    requirements = None
+    for r in ['requirements.yml', 'requirements.yaml']:
+        if os.path.exists(os.path.join(collection, r)):
+            requirements = os.path.join(collection, r)
+            break
+    if requirements:
+        shutil.copy2(requirements, os.path.join(workspace, 'requirements.yml'))
+
+    roles = os.path.join(collection, 'roles')
+    if os.path.exists(roles):
+        shutil.copytree(roles, os.path.join(workspace, 'roles'))
+
+    plugins = os.path.join(collection, 'plugins')
+    if os.path.exists(plugins):
+        shutil.copytree(plugins, os.path.join(workspace, 'plugins'))
 
     os.makedirs(os.path.join(workspace, 'host_vars'), exist_ok=True)
     with open(os.path.join(workspace, 'host_vars', 'localhost.yml'), 'w') as f:
