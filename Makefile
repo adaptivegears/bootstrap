@@ -9,7 +9,7 @@ PYTHON_RELEASE ?= 20240814
 PYTHON_VERSION ?= 3.11.9
 
 .PHONY: build
-build: # Build binary using Docker
+build: ## Build binary using Docker
 	docker buildx build \
 		--platform linux/$(ANSIBLE_ARCH) \
 		--build-arg ANSIBLE_ARCH=$(ANSIBLE_ARCH) \
@@ -20,7 +20,7 @@ build: # Build binary using Docker
 		--output dist src
 
 .PHONY: run
-run: build # Run shell in Docker container
+run: build ## Run shell in Docker container
 	docker run -it --rm \
 		-v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset:ro \
 		-v $(shell pwd)/tests/presets:/opt/presets:ro \
