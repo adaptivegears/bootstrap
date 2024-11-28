@@ -4,8 +4,11 @@ import sys
 import tempfile
 import shutil
 import subprocess
+import json
 
-Preset = collections.namedtuple('Preset', ['collection', 'playbook'])
+from .arguments import parse_arguments
+
+Preset = collections.namedtuple('Preset', ['collection', 'playbook', 'extra_vars'])
 
 USERDIR = os.environ['USER_PWD']
 PYTHONBIN = os.environ['PYTHONBIN']
@@ -14,15 +17,13 @@ PYTHONBIN = os.environ['PYTHONBIN']
 def parse_preset():
     args = sys.argv[1:]
     collection = args[0]
-    if len(args) == 1:
-        return Preset(collection, None)
-    elif len(args) == 2:
-        return Preset(collection, args[1])
-    else:
-        raise ValueError('Invalid number of arguments')
+    playbook = args[1]
+    extra_vars = parse_arguments(sys.argv[2:])
+    extra_vars = json.dumps(extra_vars)
+    return Preset(collection, playbook, extra_vars)
 
 
-def execute(workspace):
+def execute(workspace, extra_vars):
     if os.path.exists(os.path.join(workspace, 'requirements.yml')):
         galaxy = os.path.join(PYTHONBIN, 'ansible-galaxy')
         rc = subprocess.run(
@@ -42,7 +43,7 @@ def execute(workspace):
     playbook = os.path.join(workspace, 'playbook.yml')
 
     rc = subprocess.run(
-        f'{ansible} {playbook}',
+        f'{ansible} {playbook} --extra-vars \'{extra_vars}\'',
         cwd=workspace,
         env=os.environ,
         shell=True,
@@ -111,7 +112,7 @@ def process(workspace, preset):
         raise PermissionError(f'Playbook is not readable: {playbook}')
 
     clone(workspace, collection, playbook)
-    return execute(workspace)
+    return execute(workspace, preset.extra_vars)
 
 
 def main():
