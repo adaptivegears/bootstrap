@@ -23,7 +23,7 @@ assert_teardown() {
 }
 
 # bats test_tags=T001
-@test "T001: getansible.sh" {
+@test "T001: preset" {
     run preset
     assert_failure 1
     assert_output --partial "Usage: preset"
