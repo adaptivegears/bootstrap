@@ -29,4 +29,17 @@ def parse_arguments(argv):
 
     if key:
         r[key] = True
-    return r
+
+    out = {}
+    for k, v in r.items():
+        k = k.replace('-', '_')
+
+        if isinstance(v, str) and v.isdigit():
+            v = int(v)
+        elif v == 'true':
+            v = True
+        elif v == 'false':
+            v = False
+        out[k] = v
+
+    return out
