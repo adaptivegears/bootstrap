@@ -26,3 +26,11 @@ run: build ## Run shell in Docker container
 		-v $(shell pwd)/tests/presets:/opt/presets:ro \
 		debian:12 \
 		preset -- /opt/presets /opt/presets/playbooks/ping.yml
+
+.PHONY: test
+test: build ## Test the binary
+	docker run --rm \
+		--platform linux/$(ANSIBLE_ARCH) \
+		-v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset \
+		-v $(shell pwd)/tests:/usr/local/src \
+		ghcr.io/andreygubarev/bats:latest /usr/local/src

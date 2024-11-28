@@ -15,6 +15,9 @@ PYTHONBIN = os.environ['PYTHONBIN']
 
 
 def parse_preset():
+    if len(sys.argv) < 3:
+        print('Usage: preset <collection> <playbook> [extra_vars]')
+        sys.exit(1)
     args = sys.argv[1:]
     collection = args[0]
     playbook = args[1]
