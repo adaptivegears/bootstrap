@@ -35,12 +35,11 @@ def execute(ws):
 
     ansible_runner.run(
         private_data_dir=ws.workdir,
-        playbook=ws.ansible.playbook,
+        playbook=workspace.WORKSPACE_PLAYBOOK(ws),
         extravars=ws.ansible.variables,
-        inventory=ws.workdir,
+        inventory=workspace.WORKSPACE_INVENTORY(ws),
         rotate_artifacts=1,
         quiet=False,
-        json_mode=True
     )
 
     return 0
