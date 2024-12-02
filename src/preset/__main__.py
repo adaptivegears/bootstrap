@@ -1,7 +1,6 @@
 import os
 import sys
 import tempfile
-import shutil
 import subprocess
 
 from . import cli
@@ -12,7 +11,7 @@ USERDIR = os.environ['USER_PWD']
 PYTHONBIN = os.environ['PYTHONBIN']
 
 
-def execute(ws, extra_vars):
+def execute(ws, variables):
     if os.path.exists(os.path.join(ws, 'requirements.yml')):
         galaxy = os.path.join(PYTHONBIN, 'ansible-galaxy')
         rc = subprocess.run(
@@ -32,7 +31,7 @@ def execute(ws, extra_vars):
     playbook = os.path.join(ws, 'playbook.yml')
 
     rc = subprocess.run(
-        f'{ansible} {playbook} --extra-vars \'{extra_vars}\'',
+        f'{ansible} {playbook} --extra-vars \'{variables}\'',
         cwd=ws,
         env=os.environ,
         shell=True,
@@ -45,7 +44,7 @@ def execute(ws, extra_vars):
     return 0
 
 
-def process(ws, ansible):
+def process(workdir, ansible):
     if os.path.isabs(ansible.collection):
         collection = ansible.collection
     else:
@@ -68,14 +67,14 @@ def process(ws, ansible):
     if not os.access(playbook, os.R_OK):
         raise PermissionError(f'Playbook is not readable: {playbook}')
 
-    workspace.clone(ws, collection, playbook)
-    return execute(ws, ansible.extra_vars)
+    workspace.clone(workdir, collection, playbook)
+    return execute(workdir, ansible.extra_vars)
 
 
 def main():
     ansible = cli.parse()
-    with tempfile.TemporaryDirectory(prefix='preset-') as ws:
-        process(ws, ansible)
+    with tempfile.TemporaryDirectory(prefix='preset-') as workdir:
+        process(workdir, ansible)
 
 if __name__ == '__main__':
     main()

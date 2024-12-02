@@ -34,3 +34,7 @@ test: build ## Test the binary
 		-v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset \
 		-v $(shell pwd)/tests:/usr/local/src \
 		ghcr.io/andreygubarev/bats:latest /usr/local/src
+
+.PHONY: watch
+watch: ## Watch for changes and run tests
+	find . -name "*.py" | entr make test

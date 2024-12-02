@@ -1,4 +1,4 @@
 import collections
 
-Ansible = collections.namedtuple('Ansible', ['collection', 'playbook', 'extra_vars'])
-Workspace = collections.namedtuple('Workspace', ['path', 'preset'])
+Ansible = collections.namedtuple('Ansible', ['collection', 'playbook', 'variables'])
+Workspace = collections.namedtuple('Workspace', ['workdir', 'ansible'])

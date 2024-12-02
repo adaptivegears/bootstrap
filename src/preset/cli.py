@@ -6,6 +6,7 @@ from . import types
 
 REGEX_KEY = re.compile(r'^--?([a-zA-Z0-9_\-]+)=?')
 
+
 def parse_arguments(argv):
     r = {}
 
@@ -56,6 +57,6 @@ def parse():
     args = sys.argv[1:]
     collection = args[0]
     playbook = args[1]
-    extra_vars = parse_arguments(sys.argv[2:])
-    extra_vars = json.dumps(extra_vars)
-    return types.Ansible(collection, playbook, extra_vars)
+    variables = parse_arguments(sys.argv[2:])
+    variables = json.dumps(variables)
+    return types.Ansible(collection, playbook, variables)
