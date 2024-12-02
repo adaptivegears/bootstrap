@@ -11,6 +11,11 @@ on:
     tags:
       - "v*.*.*"
 
+env:
+  DOCKER_BUILD_CHECKS_ANNOTATIONS: false
+  DOCKER_BUILD_SUMMARY: false
+  DOCKER_BUILD_RECORD_UPLOAD: false
+
 permissions:
   contents: read
 
@@ -41,9 +46,10 @@ jobs:
         with:
           context: src
           push: false
+          load: true
           platforms: linux/${{ matrix.platform.ansible }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=linux/${{ matrix.platform.ansible }}
+          cache-to: type=gha,mode=max,scope=linux/${{ matrix.platform.ansible }}
           build-args: |
             ANSIBLE_ARCH=${{ matrix.platform.ansible }}
             PYTHON_ARCH=${{ matrix.platform.python }}
@@ -109,6 +115,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           merge-multiple: true
+          pattern: preset-linux-*
 
       - name: Create SHA512SUMS
         run: |
