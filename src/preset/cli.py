@@ -1,9 +1,9 @@
+import collections
+import os
 import re
 import sys
-import json
-import os
 
-from . import types
+Ansible = collections.namedtuple('Ansible', ['collection', 'playbook', 'variables'])
 
 REGEX_KEY = re.compile(r'^--?([a-zA-Z0-9_\-]+)=?')
 USERDIR = os.environ['USER_PWD']
@@ -75,4 +75,4 @@ def parse():
         raise PermissionError(f'Playbook is not readable: {playbook}')
 
     variables = parse_arguments(argv[2:])
-    return types.Ansible(collection, playbook, variables)
+    return Ansible(collection, playbook, variables)

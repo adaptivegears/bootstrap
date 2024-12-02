@@ -1,9 +1,13 @@
+import collections
+import json
 import os
 import shutil
 import sys
-import json
 
 import ansible_runner
+
+
+Workspace = collections.namedtuple('Workspace', ['workdir', 'ansible'])
 
 WORKSPACE_INVENTORY = lambda w: os.path.join(w.workdir, 'inventory')
 WORKSPACE_HOSTS = lambda w: os.path.join(w.workdir, 'inventory', 'hosts')
