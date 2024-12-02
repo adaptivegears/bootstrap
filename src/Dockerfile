@@ -7,8 +7,8 @@ RUN apt-get update -yq && apt-get install -yq --no-install-recommends \
     curl \
     makeself
 
-ARG ANSIBLE_ARCH=amd64
-ENV ANSIBLE_ARCH=${ANSIBLE_ARCH}
+ARG PACKAGE_ARCH=x86_64
+ENV PACKAGE_ARCH=${PACKAGE_ARCH}
 
 ARG PYTHON_RELEASE=20241016
 ENV PYTHON_RELEASE=${PYTHON_RELEASE}
@@ -16,11 +16,8 @@ ENV PYTHON_RELEASE=${PYTHON_RELEASE}
 ARG PYTHON_VERSION=3.11.10
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
-ARG PYTHON_ARCH=x86_64
-ENV PYTHON_ARCH=${PYTHON_ARCH}
-
 WORKDIR /usr/local/src
-ENV PYTHON="cpython-${PYTHON_VERSION}+${PYTHON_RELEASE}-${PYTHON_ARCH}-unknown-linux-gnu-install_only_stripped.tar.gz"
+ENV PYTHON="cpython-${PYTHON_VERSION}+${PYTHON_RELEASE}-${PACKAGE_ARCH}-unknown-linux-gnu-install_only_stripped.tar.gz"
 RUN curl -fsSLo "${PYTHON}" "https://github.com/indygreg/python-build-standalone/releases/download/${PYTHON_RELEASE}/${PYTHON}"
 RUN tar xzf "${PYTHON}" && rm -f "${PYTHON}"
 
@@ -43,11 +40,11 @@ RUN makeself --header "/usr/share/makeself/makeself-header.sh" \
     --tar-extra '--mtime=2024-01-01' \
     --packaging-date '2024-01-01T00:00:00Z' \
     "/usr/local/src" \
-    "/usr/local/bin/preset-linux-${ANSIBLE_ARCH}" \
+    "/usr/local/bin/preset-linux-${PACKAGE_ARCH}" \
     "Preset (Python ${PYTHON_VERSION})" \
     ./entrypoint.sh
 
 FROM scratch
-ARG ANSIBLE_ARCH=amd64
-ENV ANSIBLE_ARCH=${ANSIBLE_ARCH}
-COPY --from=build --chown=root:root --chmod=0755 "/usr/local/bin/preset-linux-${ANSIBLE_ARCH}" /
+ARG PACKAGE_ARCH=x86_64
+ENV PACKAGE_ARCH=${PACKAGE_ARCH}
+COPY --from=build --chown=root:root --chmod=0755 "/usr/local/bin/preset-linux-${PACKAGE_ARCH}" /

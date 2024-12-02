@@ -25,11 +25,13 @@ jobs:
 
     strategy:
       matrix:
-        platform:
-          - ansible: amd64
-            python: x86_64
-          - ansible: arm64
-            python: aarch64
+        target:
+          - os: linux
+            platform: amd64
+            package: x86_64
+          - os: linux
+            platform: arm64
+            package: aarch64
 
     steps:
       - name: Checkout
@@ -47,21 +49,20 @@ jobs:
           context: src
           push: false
           load: true
-          platforms: linux/${{ matrix.platform.ansible }}
-          cache-from: type=gha,scope=linux/${{ matrix.platform.ansible }}
-          cache-to: type=gha,mode=max,scope=linux/${{ matrix.platform.ansible }}
+          platforms: ${{ matrix.target.os }}/${{ matrix.target.platform }}
+          cache-from: type=gha,scope=${{ matrix.target.os }}/${{ matrix.target.platform }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.target.os }}/${{ matrix.target.platform }}
           build-args: |
-            ANSIBLE_ARCH=${{ matrix.platform.ansible }}
-            PYTHON_ARCH=${{ matrix.platform.python }}
-            PYTHON_RELEASE=20241016
-            PYTHON_VERSION=3.11.10
+            PLATFORM_OS=${{ matrix.target.os }}
+            PLATFORM_ARCH=${{ matrix.target.platform }}
+            PACKAGE_ARCH=${{ matrix.target.package }}
           outputs: |
             type=local,dest=dist
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: preset-linux-${{ matrix.platform.ansible }}
+          name: preset-${{ matrix.target.os }}-${{ matrix.target.platform }}
           path: "dist/*"
 
   test:
@@ -70,9 +71,10 @@ jobs:
 
     strategy:
       matrix:
-        platform:
-          - ansible: amd64
-            python: x86_64
+        target:
+          - os: linux
+            platform: amd64
+            package: x86_64
 
     steps:
       - name: Checkout
@@ -87,14 +89,15 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: preset-linux-${{ matrix.platform.ansible }}
+          name: preset-${{ matrix.target.os }}-${{ matrix.target.platform }}
           path: dist
 
       - name: Test
         run: >-
           make test
-          ANSIBLE_ARCH=${{ matrix.platform.ansible }}
-          PYTHON_ARCH=${{ matrix.platform.python }}
+          PLATFORM_OS=${{ matrix.target.os }}
+          PLATFORM_ARCH=${{ matrix.target.platform }}
+          PACKAGE_ARCH=${{ matrix.target.package }}
 
   release:
     runs-on: ubuntu-latest
@@ -115,7 +118,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           merge-multiple: true
-          pattern: preset-linux-*
+          pattern: preset-*
 
       - name: Create SHA512SUMS
         run: |
