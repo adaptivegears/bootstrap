@@ -19,13 +19,13 @@ build: ## Build binary using Docker
 		--progress=plain \
 		--output dist src
 
-.PHONY: run
-run: build ## Run shell in Docker container
+.PHONY: shell
+shell: build ## Run shell in Docker container
 	docker run -it --rm \
 		-v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset:ro \
 		-v $(shell pwd)/tests/presets:/opt/presets:ro \
-		debian:12 \
-		preset -- /opt/presets /opt/presets/playbooks/ping.yml
+		debian:12 /bin/bash
+		# preset -- /opt/presets /opt/presets/playbooks/ping.yml
 
 .PHONY: test
 test: build ## Test the binary

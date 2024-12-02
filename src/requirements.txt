@@ -1,4 +1,5 @@
 ansible~=10.0
+ansible-runner~=2.0
 dnspython~=2.0
 kubernetes~=29.0
 netaddr~=1.0
