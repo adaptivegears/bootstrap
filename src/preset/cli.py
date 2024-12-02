@@ -1,4 +1,8 @@
 import re
+import sys
+import json
+
+from . import types
 
 REGEX_KEY = re.compile(r'^--?([a-zA-Z0-9_\-]+)=?')
 
@@ -43,3 +47,15 @@ def parse_arguments(argv):
         out[k] = v
 
     return out
+
+
+def parse():
+    if len(sys.argv) < 3:
+        print('Usage: preset <collection> <playbook> [extra_vars]')
+        sys.exit(1)
+    args = sys.argv[1:]
+    collection = args[0]
+    playbook = args[1]
+    extra_vars = parse_arguments(sys.argv[2:])
+    extra_vars = json.dumps(extra_vars)
+    return types.Preset(collection, playbook, extra_vars)

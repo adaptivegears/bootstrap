@@ -1,29 +1,14 @@
-import collections
 import os
 import sys
 import tempfile
 import shutil
 import subprocess
-import json
 
-from .arguments import parse_arguments
+from . import cli
 
-Preset = collections.namedtuple('Preset', ['collection', 'playbook', 'extra_vars'])
 
 USERDIR = os.environ['USER_PWD']
 PYTHONBIN = os.environ['PYTHONBIN']
-
-
-def parse_preset():
-    if len(sys.argv) < 3:
-        print('Usage: preset <collection> <playbook> [extra_vars]')
-        sys.exit(1)
-    args = sys.argv[1:]
-    collection = args[0]
-    playbook = args[1]
-    extra_vars = parse_arguments(sys.argv[2:])
-    extra_vars = json.dumps(extra_vars)
-    return Preset(collection, playbook, extra_vars)
 
 
 def execute(workspace, extra_vars):
@@ -119,7 +104,7 @@ def process(workspace, preset):
 
 
 def main():
-    preset = parse_preset()
+    preset = cli.parse()
     with tempfile.TemporaryDirectory(prefix='preset-') as workspace:
         process(workspace, preset)
 

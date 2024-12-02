@@ -29,3 +29,19 @@ assert_teardown() {
     assert_output --partial "Usage: preset"
     assert_teardown
 }
+
+# bats test_tags=T002
+@test "T002: preset with insufficient arguments" {
+    run preset collection
+    assert_failure 1
+    assert_output --partial "Usage: preset"
+    assert_teardown
+}
+
+# bats test_tags=T003
+@test "T003: preset with nonexistent collection" {
+    run preset /nonexistent/collection playbook.yml
+    assert_failure
+    assert_output --partial "Collection not found"
+    assert_teardown
+}
