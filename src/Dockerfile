@@ -27,7 +27,7 @@ RUN tar xzf "${PYTHON}" && rm -f "${PYTHON}"
 ENV PYTHONBIN="/usr/local/src/python/bin"
 ENV PATH="${PYTHONBIN}:${PATH}"
 COPY requirements.txt python
-RUN python -m pip install -r python/requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip python -m pip install -r python/requirements.txt
 RUN find "${PYTHONBIN}" -type f -exec sed -i '1s|^#!.*python.*$|#!/usr/bin/env python3|' {} \;
 RUN rm -r python/share
 RUN find python -type d -name "__pycache__" -print | xargs rm -rf
