@@ -21,8 +21,10 @@ jobs:
     strategy:
       matrix:
         platform:
-          - amd64
-          - arm64
+          - ansible: amd64
+            python: x86_64
+          - ansible: arm64
+            python: aarch64
 
     steps:
       - name: Checkout
@@ -37,8 +39,8 @@ jobs:
       - name: Build
         run: >-
           make build
-          ANSIBLE_ARCH=${{ matrix.platform }}
-          PYTHON_ARCH=${{ matrix.platform }}
+          ANSIBLE_ARCH=${{ matrix.platform.ansible }}
+          PYTHON_ARCH=${{ matrix.platform.python }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
