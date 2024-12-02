@@ -5,6 +5,10 @@ setup() {
     bats_load_library bats-file
     bats_load_library bats-support
 
+    if [ ! -x "/usr/local/bin/preset" ]; then
+        chmod +x "/usr/local/bin/preset"
+    fi
+
     if [ -n "$TMPDIR" ]; then
       export TMPDIR="$TMPDIR/bats"
     else
