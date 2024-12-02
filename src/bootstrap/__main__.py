@@ -5,9 +5,9 @@ from . import workspace
 
 
 def main():
-    with tempfile.TemporaryDirectory(prefix='preset-tmp-') as tempdir:
+    with tempfile.TemporaryDirectory(prefix='bootstrap-tmp-') as tempdir:
         ansible = cli.parse(tempdir=tempdir)
-        with tempfile.TemporaryDirectory(prefix='preset-') as workdir:
+        with tempfile.TemporaryDirectory(prefix='bootstrap-') as workdir:
             ws = workspace.Workspace(workdir, ansible)
             workspace.clone(ws)
             workspace.execute(ws)

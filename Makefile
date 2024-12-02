@@ -23,21 +23,21 @@ build: ## Build binary using Docker
 
 .PHONY: shell
 shell: build ## Run shell in Docker container
-	@echo "preset -- /opt/presets /opt/presets/playbooks/ping.yml"
+	@echo "bootstrap -- /opt/collection /opt/collection/playbooks/ping.yml"
 	@docker run -it --rm \
 		--platform $(PLATFORM_OS)/$(PLATFORM_ARCH) \
-		-v $(shell pwd)/dist/preset-linux-$(PACKAGE_ARCH):/usr/local/bin/preset:ro \
-		-v $(shell pwd)/tests/presets:/opt/presets:ro \
+		-v $(shell pwd)/dist/bootstrap-linux-$(PACKAGE_ARCH):/usr/local/bin/bootstrap:ro \
+		-v $(shell pwd)/tests/collection:/opt/collection:ro \
 		debian:12 /bin/bash
 
 .PHONY: test
 test: ## Test the binary
-	@chmod +x $(shell pwd)/dist/preset-linux-$(PACKAGE_ARCH)
+	@chmod +x $(shell pwd)/dist/bootstrap-linux-$(PACKAGE_ARCH)
 	@docker run --rm \
     	--platform $(PLATFORM_OS)/$(PLATFORM_ARCH) \
-		-v $(shell pwd)/dist/preset-linux-$(PACKAGE_ARCH):/usr/local/bin/preset:ro \
-		-v $(shell pwd)/tests/presets:/opt/presets:ro \
-		-v $(shell pwd)/tests/preset.bats:/usr/local/src/preset.bats:ro \
+		-v $(shell pwd)/dist/bootstrap-linux-$(PACKAGE_ARCH):/usr/local/bin/bootstrap:ro \
+		-v $(shell pwd)/tests/collection:/opt/collection:ro \
+		-v $(shell pwd)/tests/bootstrap.bats:/usr/local/src/bootstrap.bats:ro \
 		ghcr.io/andreygubarev/bats:latest /usr/local/src
 
 .PHONY: watch

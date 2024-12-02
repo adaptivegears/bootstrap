@@ -47,4 +47,4 @@ mkdir -p "$ANSIBLE_HOME/collections"
 export ANSIBLE_COLLECTIONS_PATH
 
 ### main ######################################################################
-"${PYTHONBIN}/python3" -m preset "$@"
+"${PYTHONBIN}/python3" -m bootstrap "$@"

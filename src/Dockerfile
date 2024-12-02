@@ -31,7 +31,7 @@ RUN find python -type d -name "__pycache__" -print | xargs rm -rf
 RUN find python -type d -name "tests" -print | xargs rm -rf
 
 COPY --chmod=0755 --chown=root:root entrypoint.sh .
-COPY preset preset
+COPY bootstrap bootstrap
 RUN makeself --header "/usr/share/makeself/makeself-header.sh" \
     --gzip --complevel 1 \
     --nomd5 --nocrc \
@@ -40,11 +40,11 @@ RUN makeself --header "/usr/share/makeself/makeself-header.sh" \
     --tar-extra '--mtime=2024-01-01' \
     --packaging-date '2024-01-01T00:00:00Z' \
     "/usr/local/src" \
-    "/usr/local/bin/preset-linux-${PACKAGE_ARCH}" \
-    "Preset (Python ${PYTHON_VERSION})" \
+    "/usr/local/bin/bootstrap-linux-${PACKAGE_ARCH}" \
+    "bootstrap (Python ${PYTHON_VERSION})" \
     ./entrypoint.sh
 
 FROM scratch
 ARG PACKAGE_ARCH=x86_64
 ENV PACKAGE_ARCH=${PACKAGE_ARCH}
-COPY --from=build --chown=root:root --chmod=0755 "/usr/local/bin/preset-linux-${PACKAGE_ARCH}" /
+COPY --from=build --chown=root:root --chmod=0755 "/usr/local/bin/bootstrap-linux-${PACKAGE_ARCH}" /
