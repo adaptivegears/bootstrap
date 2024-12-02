@@ -55,7 +55,7 @@ def parse_arguments(argv):
 
 def parse(tempdir):
     if len(sys.argv) == 1:
-        print('Usage: preset <collection> <playbook> [extra_vars]')
+        print('Usage: bootstrap <collection> <playbook> [extra_vars]')
         sys.exit(1)
     argv = sys.argv[1:]
 
@@ -90,7 +90,7 @@ def parse(tempdir):
         argv.insert(1, playbook)
 
     if len(argv) < 2:
-        print('Usage: preset <collection> <playbook> [extra_vars]')
+        print('Usage: bootstrap <collection> <playbook> [extra_vars]')
         sys.exit(1)
 
     if not os.path.isabs(collection):
