@@ -42,6 +42,8 @@ jobs:
           context: src
           push: false
           platforms: linux/${{ matrix.platform.ansible }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             ANSIBLE_ARCH=${{ matrix.platform.ansible }}
             PYTHON_ARCH=${{ matrix.platform.python }}
