@@ -3,6 +3,7 @@
 help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
+
 PLATFORM_OS ?= linux
 PLATFORM_ARCH ?= arm64
 PACKAGE_ARCH ?= aarch64
@@ -10,9 +11,17 @@ PACKAGE_ARCH ?= aarch64
 PYTHON_RELEASE ?= 20241016
 PYTHON_VERSION ?= 3.11.10
 
+ifdef GITHUB_ACTIONS
+	GITHUB_ACTIONS_CACHE=--cache-from=type=gha,scope=$(PLATFORM_OS)/$(PLATFORM_ARCH) --cache-to=type=gha,scope=$(PLATFORM_OS)/$(PLATFORM_ARCH)
+else
+	GITHUB_ACTIONS_CACHE=
+endif
+
+
 .PHONY: build
 build: ## Build binary using Docker
 	docker buildx build \
+		$(GITHUB_ACTIONS_CACHE) \
 		--platform $(PLATFORM_OS)/$(PLATFORM_ARCH) \
 		--build-arg PACKAGE_ARCH=$(PACKAGE_ARCH) \
 		--build-arg PYTHON_RELEASE=$(PYTHON_RELEASE) \
