@@ -41,6 +41,7 @@ jobs:
         with:
           context: src
           push: false
+          load: true
           platforms: linux/${{ matrix.platform.ansible }}
           cache-from: type=gha,scope=linux/${{ matrix.platform.ansible }}
           cache-to: type=gha,mode=max,scope=linux/${{ matrix.platform.ansible }}
