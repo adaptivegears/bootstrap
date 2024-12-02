@@ -59,7 +59,7 @@ jobs:
           outputs: |
             type=local,dest=dist
 
-      - name: Make executable
+      - name: Set executable binary
         run: chmod +x ./dist/bootstrap-${{ matrix.target.os }}-${{ matrix.target.platform }}
 
       - name: Upload Artifact
