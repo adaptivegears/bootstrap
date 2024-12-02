@@ -62,7 +62,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: preset-linux-${{ matrix.target.ansible }}
+          name: preset-${{ matrix.target.os }}/${{ matrix.target.platform }}
           path: "dist/*"
 
   test:
@@ -72,8 +72,9 @@ jobs:
     strategy:
       matrix:
         platform:
-          - ansible: amd64
-            python: x86_64
+          - os: linux
+            platform: amd64
+            package: x86_64
 
     steps:
       - name: Checkout
@@ -88,14 +89,15 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: preset-linux-${{ matrix.target.ansible }}
+          name: preset-${{ matrix.target.os }}/${{ matrix.target.platform }}
           path: dist
 
       - name: Test
         run: >-
           make test
-          ANSIBLE_ARCH=${{ matrix.target.ansible }}
-          PYTHON_ARCH=${{ matrix.target.python }}
+          PLATFORM_OS=${{ matrix.target.os }}
+          PLATFORM_ARCH=${{ matrix.target.platform }}
+          PACKAGE_ARCH=${{ matrix.target.package }}
 
   release:
     runs-on: ubuntu-latest
@@ -116,7 +118,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           merge-multiple: true
-          pattern: preset-linux-*
+          pattern: preset-*
 
       - name: Create SHA512SUMS
         run: |
