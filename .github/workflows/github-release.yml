@@ -37,10 +37,18 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build
-        run: >-
-          make build
-          ANSIBLE_ARCH=${{ matrix.platform.ansible }}
-          PYTHON_ARCH=${{ matrix.platform.python }}
+        uses: docker/build-push-action@v6
+        with:
+          context: src
+          push: false
+          platforms: linux/${{ matrix.platform.ansible }}
+          build-args:
+            - ANSIBLE_ARCH=${{ matrix.platform.ansible }}
+            - PYTHON_ARCH=${{ matrix.platform.python }}
+            - PYTHON_RELEASE=20241016
+            - PYTHON_VERSION=3.11.10
+          outputs:
+            - type=local,dest=dist
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
