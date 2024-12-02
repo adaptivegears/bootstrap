@@ -59,9 +59,6 @@ jobs:
           outputs: |
             type=local,dest=dist
 
-      - name: Set executable binary
-        run: chmod +x ./dist/bootstrap-${{ matrix.target.os }}-${{ matrix.target.platform }}
-
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -122,6 +119,10 @@ jobs:
         with:
           merge-multiple: true
           pattern: bootstrap-*
+
+      - name: Set executable binary
+        run: |
+          chmod +x bootstrap-*
 
       - name: Create SHA512SUMS
         run: |
