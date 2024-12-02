@@ -62,10 +62,14 @@ def parse(tempdir):
     collection = argv[0]
 
     if collection.startswith('@'):
-        # @owner/playbook ~ github.com/<owner>/ansible-collection-actions//playbooks/<playbook>.yml
+        # @owner/playbook/reference ~ github.com/<owner>/ansible-collection-actions//playbooks/<playbook>.yml
+        # @andreygubarev/ping/v1.0.0
         organization, playbook = collection.split('/', 1)
+        if '/' in playbook:
+            playbook, reference = playbook.split('/', 1)
+        else:
+            reference = 'main'
         organization = organization[1:]
-        reference = 'main'
 
         github_url = f'https://codeload.github.com/{organization}/ansible-collection-actions/tar.gz/{reference}'
         r = requests.get(github_url)
