@@ -20,6 +20,7 @@ build: ## Build binary using Docker
 		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
 		--progress=plain \
 		--output dist src
+	chmod +x $(shell pwd)/dist/bootstrap-$(PLATFORM_OS)-$(PACKAGE_ARCH)
 
 .PHONY: shell
 shell: build ## Run shell in Docker container
