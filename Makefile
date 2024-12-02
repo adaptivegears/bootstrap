@@ -29,9 +29,10 @@ shell: build ## Run shell in Docker container
 
 .PHONY: test
 test: ## Test the binary
+	@chmod +x $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH)
 	@docker run --rm \
 		--platform linux/$(ANSIBLE_ARCH) \
-		-v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset \
+		-v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset:ro \
 		-v $(shell pwd)/tests/presets:/opt/presets:ro \
 		-v $(shell pwd)/tests/preset.bats:/usr/local/src/preset.bats:ro \
 		ghcr.io/andreygubarev/bats:latest /usr/local/src
