@@ -48,3 +48,10 @@ assert_teardown() {
     assert_success
     assert_teardown
 }
+
+# bats test_tags=T005
+@test "T005: preset with GitHub collection" {
+    run preset -- @andreygubarev/ping
+    assert_success
+    assert_teardown
+}

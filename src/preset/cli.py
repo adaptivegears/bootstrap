@@ -2,12 +2,13 @@ import collections
 import os
 import re
 import sys
+import requests
+import tarfile
 
 Ansible = collections.namedtuple('Ansible', ['collection', 'playbook', 'variables'])
 
 REGEX_KEY = re.compile(r'^--?([a-zA-Z0-9_\-]+)=?')
 USERDIR = os.environ['USER_PWD']
-
 
 def parse_arguments(argv):
     r = {}
@@ -52,13 +53,42 @@ def parse_arguments(argv):
     return out
 
 
-def parse():
-    if len(sys.argv) < 3:
+def parse(tempdir):
+    if len(sys.argv) == 1:
         print('Usage: preset <collection> <playbook> [extra_vars]')
         sys.exit(1)
     argv = sys.argv[1:]
 
     collection = argv[0]
+
+    if collection.startswith('@'):
+        # @owner/playbook ~ github.com/<owner>/ansible-collection-actions//playbooks/<playbook>.yml
+        organization, playbook = collection.split('/', 1)
+        organization = organization[1:]
+        reference = 'main'
+
+        github_url = f'https://codeload.github.com/{organization}/ansible-collection-actions/tar.gz/{reference}'
+        r = requests.get(github_url)
+        r.raise_for_status()
+        with open(os.path.join(tempdir, 'collection.tar.gz'), 'wb') as f:
+            f.write(r.content)
+
+        collection = os.path.join(tempdir, 'collection')
+        with tarfile.open(os.path.join(tempdir, 'collection.tar.gz')) as tar:
+            tar.extractall(collection)
+
+        # If collection folder has exactly one dir, use it as collection root
+        subdirs = [d for d in os.listdir(collection) if os.path.isdir(os.path.join(collection, d))]
+        if len(subdirs) == 1:
+            collection = os.path.join(collection, subdirs[0])
+
+        playbook = os.path.join(collection, 'playbooks', f'{playbook}.yml')
+        argv.insert(1, playbook)
+
+    if len(argv) < 2:
+        print('Usage: preset <collection> <playbook> [extra_vars]')
+        sys.exit(1)
+
     if not os.path.isabs(collection):
         collection = os.path.join(USERDIR, collection)
     if not (os.path.exists(collection) and os.path.isdir(collection)):
