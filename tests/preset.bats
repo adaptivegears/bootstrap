@@ -5,10 +5,6 @@ setup() {
     bats_load_library bats-file
     bats_load_library bats-support
 
-    if [ -f /usr/local/bin/getansible.sh ]; then
-        chmod +x /usr/local/bin/getansible.sh
-    fi
-
     if [ -n "$TMPDIR" ]; then
       export TMPDIR="$TMPDIR/bats"
     else
