@@ -120,6 +120,10 @@ jobs:
           merge-multiple: true
           pattern: bootstrap-*
 
+      - name: Set executable binary
+        run: |
+          chmod +x bootstrap-*
+
       - name: Create SHA512SUMS
         run: |
           sha512sum bootstrap-* > SHA512SUMS
