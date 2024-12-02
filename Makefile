@@ -5,8 +5,8 @@ help: ## Show this help
 
 ANSIBLE_ARCH ?= arm64
 PYTHON_ARCH ?= aarch64
-PYTHON_RELEASE ?= 20240814
-PYTHON_VERSION ?= 3.11.9
+PYTHON_RELEASE ?= 20241016
+PYTHON_VERSION ?= 3.11.10
 
 .PHONY: build
 build: ## Build binary using Docker
