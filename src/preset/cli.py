@@ -58,4 +58,4 @@ def parse():
     playbook = args[1]
     extra_vars = parse_arguments(sys.argv[2:])
     extra_vars = json.dumps(extra_vars)
-    return types.Preset(collection, playbook, extra_vars)
+    return types.Ansible(collection, playbook, extra_vars)

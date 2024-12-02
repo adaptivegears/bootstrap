@@ -45,14 +45,11 @@ def execute(ws, extra_vars):
     return 0
 
 
-
-
-
-def process(ws, preset):
-    if os.path.isabs(preset.collection):
-        collection = preset.collection
+def process(ws, ansible):
+    if os.path.isabs(ansible.collection):
+        collection = ansible.collection
     else:
-        collection = os.path.join(USERDIR, preset.collection)
+        collection = os.path.join(USERDIR, ansible.collection)
 
     if not (os.path.exists(collection) and os.path.isdir(collection)):
         raise FileNotFoundError(f'Collection not found: {collection}')
@@ -60,10 +57,10 @@ def process(ws, preset):
     if not os.access(collection, os.R_OK):
         raise PermissionError(f'Collection is not readable: {collection}')
 
-    if os.path.isabs(preset.playbook):
-        playbook = preset.playbook
+    if os.path.isabs(ansible.playbook):
+        playbook = ansible.playbook
     else:
-        playbook = os.path.join(USERDIR, preset.playbook)
+        playbook = os.path.join(USERDIR, ansible.playbook)
 
     if not (os.path.exists(playbook) and os.path.isfile(playbook)):
         raise FileNotFoundError(f'Playbook not found: {playbook}')
@@ -72,13 +69,13 @@ def process(ws, preset):
         raise PermissionError(f'Playbook is not readable: {playbook}')
 
     workspace.clone(ws, collection, playbook)
-    return execute(ws, preset.extra_vars)
+    return execute(ws, ansible.extra_vars)
 
 
 def main():
-    preset = cli.parse()
+    ansible = cli.parse()
     with tempfile.TemporaryDirectory(prefix='preset-') as ws:
-        process(ws, preset)
+        process(ws, ansible)
 
 if __name__ == '__main__':
     main()
