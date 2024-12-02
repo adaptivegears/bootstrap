@@ -10,34 +10,28 @@ from . import workspace
 from . import types
 
 
-PYTHONBIN = os.environ['PYTHONBIN']
-ANSIBLE_GALAXY = os.path.join(PYTHONBIN, 'ansible-galaxy')
-ANSIBLE_PLAYBOOK = os.path.join(PYTHONBIN, 'ansible-playbook')
-
 def execute(ws):
     if os.path.exists(os.path.join(ws.workdir, 'requirements.yml')):
-        rc = subprocess.run(
-            f'{ANSIBLE_GALAXY} collection install -r requirements.yml',
-            cwd=ws,
-            env=os.environ,
-            shell=True,
-            stdout=sys.stdout,
-            stderr=sys.stderr,
-            bufsize=1
-        ).returncode
+        stdout, stderr, rc = ansible_runner.run_command(
+            host_cwd=ws.workdir,
+            executable_cmd='ansible-galaxy',
+            cmdline_args=['collection', 'install', '-r', 'requirements.yml'],
+            input_fd=sys.stdin,
+            output_fd=sys.stdout,
+            error_fd=sys.stderr,
+            envvars=os.environ,
+        )
         if rc != 0:
             raise RuntimeError('Failed to install collection dependencies')
-
-    os.environ['ANSIBLE_INVENTORY'] = os.path.join(ws.workdir, 'hosts')
 
     with open(os.path.join(ws.workdir, 'variables.json'), 'w') as f:
         f.write(json.dumps(ws.ansible.variables))
 
     ansible_runner.run(
         private_data_dir=ws.workdir,
-        playbook=workspace.WORKSPACE_PLAYBOOK(ws),
+        playbook='playbook.yml',
         extravars=ws.ansible.variables,
-        inventory=workspace.WORKSPACE_INVENTORY(ws),
+        limit='localhost',
         rotate_artifacts=1,
         quiet=False,
     )
