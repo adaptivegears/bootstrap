@@ -49,9 +49,9 @@ jobs:
           context: src
           push: false
           load: true
-          platforms: linux/${{ matrix.platform.ansible }}
-          cache-from: type=gha,scope=linux/${{ matrix.platform.ansible }}
-          cache-to: type=gha,mode=max,scope=linux/${{ matrix.platform.ansible }}
+          platforms: ${{ matrix.target.os }}/${{ matrix.target.platform }}
+          cache-from: type=gha,scope=${{ matrix.target.os }}/${{ matrix.target.platform }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.target.os }}/${{ matrix.target.platform }}
           build-args: |
             PLATFORM_OS=${{ matrix.target.os }}
             PLATFORM_ARCH=${{ matrix.target.platform }}
