@@ -28,7 +28,7 @@ shell: build ## Run shell in Docker container
 		debian:12 /bin/bash
 
 .PHONY: test
-test: build ## Test the binary
+test: ## Test the binary
 	@docker run --rm \
 		--platform linux/$(ANSIBLE_ARCH) \
 		-v $(shell pwd)/dist/preset-linux-$(ANSIBLE_ARCH):/usr/local/bin/preset:ro \
