@@ -22,6 +22,7 @@ WORKSPACE_PLUGINS = lambda w: os.path.join(w.workdir, 'project', 'plugins')
 WORKSPACE_REQUIREMENTS = lambda w: os.path.join(w.workdir, 'requirements.yml')
 
 WORKSPACE_ARTIFACTS = lambda w: os.path.join(w.workdir, 'artifacts')
+WORKSPACE_ENVIRONMENT = lambda w: os.path.join(w.workdir, 'env')
 
 
 def clone(ws):
@@ -59,6 +60,10 @@ def clone(ws):
     # artifacts
     os.makedirs(WORKSPACE_ARTIFACTS(ws))
 
+    # environment
+    os.makedirs(WORKSPACE_ENVIRONMENT(ws))
+    with open(os.path.join(WORKSPACE_ENVIRONMENT(ws), 'envvars'), 'w') as f:
+        json.dump(dict(os.environ), f)
 
 def execute(ws):
     if os.path.exists(os.path.join(ws.workdir, 'requirements.yml')):
