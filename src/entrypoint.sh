@@ -53,7 +53,7 @@ export ANSIBLE_OPENTELEMETRY_HIDE_TASK_ARGUMENTS=${ANSIBLE_OPENTELEMETRY_HIDE_TA
 
 export OTEL_SERVICE_NAME=${OTEL_SERVICE_NAME:-bootstrap}
 export OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT:-https://otlp.adaptivegears.studio}
-export OTEL_EXPORTER_OTLP_TRACES_PROTOCOL=${OTEL_EXPORTER_OTLP_TRACES_PROTOCOL:-grpc}
+export OTEL_EXPORTER_OTLP_PROTOCOL=${OTEL_EXPORTER_OTLP_PROTOCOL:-grpc}
 
 ### main ######################################################################
 "${PYTHONBIN}/python3" -m bootstrap "$@"
