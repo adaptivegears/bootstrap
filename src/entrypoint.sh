@@ -46,5 +46,8 @@ fi
 mkdir -p "$ANSIBLE_HOME/collections"
 export ANSIBLE_COLLECTIONS_PATH
 
+export ANSIBLE_OPENTELEMETRY_ENABLED=${ANSIBLE_OPENTELEMETRY_ENABLED:-false}
+export OTEL_EXPORTER_OTLP_ENDPOINT="https://otlp.adaptivegears.studio/"
+
 ### main ######################################################################
 "${PYTHONBIN}/python3" -m bootstrap "$@"

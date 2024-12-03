@@ -24,6 +24,14 @@ WORKSPACE_REQUIREMENTS = lambda w: os.path.join(w.workdir, 'requirements.yml')
 WORKSPACE_ARTIFACTS = lambda w: os.path.join(w.workdir, 'artifacts')
 WORKSPACE_ENVIRONMENT = lambda w: os.path.join(w.workdir, 'env')
 
+ANSIBLE_CONFIG = '''
+[defaults]
+callbacks_enabled = community.general.opentelemetry
+[callback_opentelemetry]
+otel_service_name = bootstrap
+otel_exporter_otlp_traces_protocol = grpc
+enable_from_environment = ANSIBLE_OPENTELEMETRY_ENABLED
+'''
 
 def clone(ws):
     # requirements
@@ -60,10 +68,17 @@ def clone(ws):
     # artifacts
     os.makedirs(WORKSPACE_ARTIFACTS(ws))
 
+    # config
+    with open(os.path.join(ws.workdir, 'ansible.cfg'), 'w') as f:
+        f.write(ANSIBLE_CONFIG)
+
     # environment
     os.makedirs(WORKSPACE_ENVIRONMENT(ws))
+    envvars = dict(os.environ)
+    envvars['ANSIBLE_CONFIG'] = os.path.join(ws.workdir, 'ansible.cfg')
     with open(os.path.join(WORKSPACE_ENVIRONMENT(ws), 'envvars'), 'w') as f:
-        json.dump(dict(os.environ), f)
+        json.dump(envvars, f)
+
 
 def execute(ws):
     if os.path.exists(os.path.join(ws.workdir, 'requirements.yml')):

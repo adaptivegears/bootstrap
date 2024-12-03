@@ -37,6 +37,7 @@ run: build ## Run shell in Docker container
 		--platform $(PLATFORM_OS)/$(PLATFORM_ARCH) \
 		-v $(shell pwd)/dist/bootstrap-linux-$(PACKAGE_ARCH):/usr/local/bin/bootstrap:ro \
 		-v $(shell pwd)/tests/collection:/opt/collection:ro \
+		-e ANSIBLE_OPENTELEMETRY_ENABLED=true \
 		debian:12 /bin/bash -c 'bootstrap -- /opt/collection /opt/collection/playbooks/ping.yml'
 
 .PHONY: test
