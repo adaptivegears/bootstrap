@@ -15,7 +15,7 @@ WORKSPACE_HOSTVARS = lambda w: os.path.join(w.workdir, 'inventory', 'host_vars')
 WORKSPACE_LOCALHOST = lambda w: os.path.join(w.workdir, 'inventory', 'host_vars', 'localhost.yml')
 
 WORKSPACE_PROJECT = lambda w: os.path.join(w.workdir, 'project')
-WORKSPACE_PLAYBOOK = lambda w: os.path.join(w.workdir, 'project', 'playbook.yml')
+WORKSPACE_PLAYBOOK = lambda w, pb: os.path.join(w.workdir, 'project', pb)
 WORKSPACE_ROLES = lambda w: os.path.join(w.workdir, 'project', 'roles')
 WORKSPACE_PLUGINS = lambda w: os.path.join(w.workdir, 'project', 'plugins')
 
@@ -53,7 +53,8 @@ def clone(ws):
 
     # project
     os.makedirs(WORKSPACE_PROJECT(ws))
-    shutil.copy2(ws.ansible.playbook, WORKSPACE_PLAYBOOK(ws))
+    playbook = os.path.basename(ws.ansible.playbook)
+    shutil.copy2(ws.ansible.playbook, WORKSPACE_PLAYBOOK(ws, playbook))
 
     roles = os.path.join(ws.ansible.collection, 'roles')
     if os.path.exists(roles):
@@ -94,9 +95,10 @@ def execute(ws):
         if rc != 0:
             raise RuntimeError('Failed to install collection dependencies')
 
+    playbook = os.path.basename(ws.ansible.playbook)
     ansible_runner.run(
         private_data_dir=ws.workdir,
-        playbook='playbook.yml',
+        playbook=playbook,
         extravars=ws.ansible.variables,
         limit='localhost',
         rotate_artifacts=0,
