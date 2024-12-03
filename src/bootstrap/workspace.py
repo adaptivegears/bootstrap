@@ -28,8 +28,6 @@ ANSIBLE_CONFIG = '''
 [defaults]
 callbacks_enabled = community.general.opentelemetry
 [callback_opentelemetry]
-otel_service_name = bootstrap
-otel_exporter_otlp_traces_protocol = grpc
 enable_from_environment = ANSIBLE_OPENTELEMETRY_ENABLED
 '''
 
