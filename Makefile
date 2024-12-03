@@ -31,6 +31,15 @@ shell: build ## Run shell in Docker container
 		-v $(shell pwd)/tests/collection:/opt/collection:ro \
 		debian:12 /bin/bash
 
+.PHONY: run
+run: build ## Run shell in Docker container
+	@docker run -it --rm \
+		--platform $(PLATFORM_OS)/$(PLATFORM_ARCH) \
+		-v $(shell pwd)/dist/bootstrap-linux-$(PACKAGE_ARCH):/usr/local/bin/bootstrap:ro \
+		-v $(shell pwd)/tests/collection:/opt/collection:ro \
+		-e ANSIBLE_OPENTELEMETRY_ENABLED=true \
+		debian:12 /bin/bash -c 'bootstrap -- /opt/collection /opt/collection/playbooks/ping.yml'
+
 .PHONY: test
 test: ## Test the binary
 	@chmod +x $(shell pwd)/dist/bootstrap-linux-$(PACKAGE_ARCH)
@@ -43,4 +52,4 @@ test: ## Test the binary
 
 .PHONY: watch
 watch: ## Watch for changes and run tests
-	find . -name "*.py" | entr make test
+	find . -name "*.py" | entr make run
