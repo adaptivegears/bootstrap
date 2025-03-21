@@ -160,6 +160,44 @@ Available configuration variables:
 
 The built binary will be in the `dist` directory.
 
+## Why Bootstrap Exists
+
+Bootstrap was created to solve several common challenges in system configuration and infrastructure management:
+
+### Problem: Complex Deployment Workflows
+
+Traditional system configuration often requires:
+- Installing Python and Ansible dependencies
+- Cloning repositories of playbooks and roles
+- Managing inventory files and configuration
+- Executing complex Ansible commands with many parameters
+
+### Solution: Simplified System Configuration
+
+Bootstrap addresses these challenges by:
+
+1. **Zero Dependencies**: The all-in-one binary includes Python and Ansible, eliminating the need to install prerequisites on target systems.
+
+2. **Direct GitHub Integration**: Run playbooks directly from GitHub using the simple `@owner/playbook` syntax without cloning repositories.
+
+3. **Simplified Interface**: Convert complex Ansible parameters into intuitive command-line options that make sense for each playbook.
+
+4. **Standardized Patterns**: Encourage consistent configuration patterns across different systems and services.
+
+5. **Observability Built-in**: OpenTelemetry integration provides visibility into deployment processes with minimal setup.
+
+6. **CLI-First Approach**: Recognizing that Ansible blends imperative and declarative paradigms, Bootstrap provides a CLI interface that feels more natural than trying to force a purely declarative model.
+
+7. **Universal Compatibility**: While Bootstrap works best with playbooks designed for it, it remains fully compatible with any standard Ansible playbook without requiring special structures or modifications.
+
+Bootstrap is particularly valuable for:
+- Initial server setup and bootstrapping
+- Applying standardized configurations across multiple systems
+- Quick deployment of common services with best practices
+- Enabling infrastructure-as-code in environments where full configuration management solutions might be overkill
+
+By reducing the complexity of running Ansible playbooks, Bootstrap makes infrastructure automation more accessible and reduces the time from provisioning to a fully configured system.
+
 ## License
 
 Copyright © AdaptiveGears
