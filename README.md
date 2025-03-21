@@ -15,10 +15,11 @@ Bootstrap is a command-line utility that simplifies the execution of Ansible pla
 
 ```shell
 apt-get update && apt-get install -yq --no-install-recommends ca-certificates curl locales
-
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
+```
 
+```shell
 curl -fsSLo /usr/local/bin/bootstrap https://github.com/adaptivegears/bootstrap/releases/download/v0.2.4/bootstrap-linux-$(uname -m)
 chown root:root /usr/local/bin/bootstrap
 chmod 0755 /usr/local/bin/bootstrap
