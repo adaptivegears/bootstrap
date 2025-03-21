@@ -34,9 +34,8 @@ Setup proper locales to ensure Ansible can work correctly:
 ```shell
 apt-get update
 apt-get install -yq --no-install-recommends locales
-echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-locale-gen
-echo "LANG=en_US.UTF-8" > /etc/default/locale
+localedef -f UTF-8 -i en_US en_US.UTF-8
+update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
 ```
 
 ### Install Bootstrap
