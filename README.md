@@ -1,6 +1,6 @@
-# Bootstrap - Ansible Playbook Runner
+# `bootstrap` - Ansible Playbook Runner
 
-Bootstrap is a command-line utility that simplifies the execution of Ansible playbooks, making it easier to bootstrap systems with a consistent configuration.
+`bootstrap` is a command-line utility that simplifies the execution of Ansible playbooks, making it easier to bootstrap systems with a consistent configuration.
 
 ## Getting Started
 
@@ -158,9 +158,9 @@ Available configuration variables:
 
 The built binary will be in the `dist` directory.
 
-## Why Bootstrap Exists
+## Why `bootstrap` Exists
 
-Bootstrap was created to solve several common challenges in system configuration and infrastructure management:
+`bootstrap` was created to solve several common challenges in system configuration and infrastructure management:
 
 ### Problem: Complex Deployment Workflows
 
@@ -172,7 +172,7 @@ Traditional system configuration often requires:
 
 ### Solution: Simplified System Configuration
 
-Bootstrap addresses these challenges by:
+`bootstrap` addresses these challenges by:
 
 1. **Zero Dependencies**: The all-in-one binary includes Python and Ansible, eliminating the need to install prerequisites on target systems.
 
@@ -184,17 +184,11 @@ Bootstrap addresses these challenges by:
 
 5. **Observability Built-in**: OpenTelemetry integration provides visibility into deployment processes with minimal setup.
 
-6. **CLI-First Approach**: Recognizing that Ansible blends imperative and declarative paradigms, Bootstrap provides a CLI interface that feels more natural than trying to force a purely declarative model.
+6. **CLI-First Approach**: Recognizing that Ansible blends imperative and declarative paradigms, `bootstrap` provides a CLI interface that feels more natural than trying to force a purely declarative model.
 
-7. **Universal Compatibility**: While Bootstrap works best with playbooks designed for it, it remains fully compatible with any standard Ansible playbook without requiring special structures or modifications.
+7. **Universal Compatibility**: While `bootstrap` works best with playbooks designed for it, it remains fully compatible with any standard Ansible playbook without requiring special structures or modifications.
 
-Bootstrap is particularly valuable for:
-- Initial server setup and bootstrapping
-- Applying standardized configurations across multiple systems
-- Quick deployment of common services with best practices
-- Enabling infrastructure-as-code in environments where full configuration management solutions might be overkill
-
-By reducing the complexity of running Ansible playbooks, Bootstrap makes infrastructure automation more accessible and reduces the time from provisioning to a fully configured system.
+`bootstrap` is particularly valuable for initial server setup and bootstrapping.
 
 ## License
 
