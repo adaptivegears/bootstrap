@@ -10,15 +10,15 @@ RUN apt-get update -yq && apt-get install -yq --no-install-recommends \
 ARG PACKAGE_ARCH=x86_64
 ENV PACKAGE_ARCH=${PACKAGE_ARCH}
 
-ARG PYTHON_RELEASE=20241016
+ARG PYTHON_RELEASE=20250317
 ENV PYTHON_RELEASE=${PYTHON_RELEASE}
 
-ARG PYTHON_VERSION=3.11.10
+ARG PYTHON_VERSION=3.11.11
 ENV PYTHON_VERSION=${PYTHON_VERSION}
 
 WORKDIR /usr/local/src
 ENV PYTHON="cpython-${PYTHON_VERSION}+${PYTHON_RELEASE}-${PACKAGE_ARCH}-unknown-linux-gnu-install_only_stripped.tar.gz"
-RUN curl -fsSLo "${PYTHON}" "https://github.com/indygreg/python-build-standalone/releases/download/${PYTHON_RELEASE}/${PYTHON}"
+RUN curl -fsSLo "${PYTHON}" "https://github.com/astral-sh/python-build-standalone/releases/download/${PYTHON_RELEASE}/${PYTHON}"
 RUN tar xzf "${PYTHON}" && rm -f "${PYTHON}"
 
 ENV PYTHONBIN="/usr/local/src/python/bin"

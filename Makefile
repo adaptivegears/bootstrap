@@ -8,8 +8,8 @@ PLATFORM_OS ?= linux
 PLATFORM_ARCH ?= arm64
 PACKAGE_ARCH ?= aarch64
 
-PYTHON_RELEASE ?= 20241016
-PYTHON_VERSION ?= 3.11.10
+PYTHON_RELEASE ?= 20250317
+PYTHON_VERSION ?= 3.11.11
 
 .PHONY: build
 build: ## Build binary using Docker
