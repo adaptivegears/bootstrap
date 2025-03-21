@@ -2,16 +2,9 @@
 
 Bootstrap is a command-line utility that simplifies the execution of Ansible playbooks, making it easier to bootstrap systems with a consistent configuration.
 
-## Features
+## Getting Started
 
-- Run Ansible playbooks from local collections or directly from GitHub
-- Simplified command-line interface
-- Built-in Python interpreter (no external dependencies)
-- OpenTelemetry support for monitoring and observability
-
-## Installation
-
-### Prerequisites
+### Prerequisites & Installation
 
 ```shell
 apt-get update && apt-get install -yq --no-install-recommends ca-certificates curl locales
@@ -24,11 +17,6 @@ curl -fsSLo /usr/local/bin/bootstrap https://github.com/adaptivegears/bootstrap/
 chown root:root /usr/local/bin/bootstrap
 chmod 0755 /usr/local/bin/bootstrap
 ```
-
-
-## Usage
-
-Bootstrap provides a simple way to run Ansible playbooks, especially those designed for system configuration.
 
 ### Basic Usage
 
