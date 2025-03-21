@@ -18,23 +18,98 @@ chmod +x /usr/local/bin/bootstrap
 
 ## Usage
 
-### Run a playbook from GitHub
+Bootstrap provides a simple way to run Ansible playbooks, especially those designed for system configuration.
+
+### Basic Usage
 
 ```shell
-bootstrap @<owner>/<playbook>[/<reference>] [extra_vars]
+# Run a playbook from GitHub using the @ syntax
+bootstrap @owner/playbook [options]
+
+# Run a local playbook
+bootstrap /path/to/playbook.yml [options]
 ```
 
-Examples:
+### GitHub Playbook References
+
+The GitHub playbook reference format is:
+
+```
+@owner/repository[/reference]
+```
+
+Where:
+- `owner`: GitHub organization or username
+- `repository`: Repository name (typically matches the playbook name)
+- `reference` (optional): Branch, tag, or commit hash (defaults to main)
+
+### Common Options
+
+Many playbooks support standard options:
+
+- `-h, --help`: Show help message for the playbook
+- `-i, --install`: Install the specified software/service
+- Various other options depending on the playbook
+
+### Examples
+
 ```shell
-# Run the standard-debian playbook from adaptivegears
+# Basic playbook execution
+bootstrap @adaptivegears/standard-debian
+
+# Run with options
 bootstrap @adaptivegears/standard-debian --prune
 
-# Run the standard-ssh playbook with a specific user
+# SSH configuration with GitHub user authorization
 bootstrap @adaptivegears/standard-ssh -U andreygubarev
 
 # Run a specific version of a playbook
 bootstrap @adaptivegears/ping/v1.0.0
+
+# Configure Tailscale with an auth token
+bootstrap @adaptivegears/tailscale --token tskey-1234567890
+
+# View help for a playbook
+bootstrap @adaptivegears/standard-kubernetes --help
+
+# Pass multiple options
+bootstrap @adaptivegears/standard-debian --minimal --prune --hostname=webserver
 ```
+
+### Working with Elevated Privileges
+
+Some playbooks require root privileges:
+
+```shell
+# Run with sudo
+sudo bootstrap @adaptivegears/standard-debian
+
+# Or use sudo -E to preserve environment variables
+sudo -E bootstrap @adaptivegears/standard-debian
+```
+
+### Using Environment Variables
+
+Many playbooks support configuration via environment variables:
+
+```shell
+# Set variables before running
+export DEBIAN_HOSTNAME=webserver
+export DEBIAN_TOPOLOGY_REGION=us-west
+bootstrap @adaptivegears/standard-debian
+
+# Or set inline
+DEBIAN_PRUNE=true bootstrap @adaptivegears/standard-debian
+```
+
+### Common Playbooks
+
+| Playbook | Description | Common Options |
+|----------|-------------|----------------|
+| `@adaptivegears/standard-debian` | Configure Debian system | `--prune`, `--minimal`, `--hostname` |
+| `@adaptivegears/standard-ssh` | Configure SSH access | `-U <github-user>`, `--enable-hardening` |
+| `@adaptivegears/standard-kubernetes` | Install Kubernetes components | Varies by component |
+| `@adaptivegears/standard-tailscale` | Configure Tailscale VPN | `--token`, `--advertise-exit-node` |
 
 ## Environment Variables
 
