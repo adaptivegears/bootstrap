@@ -13,12 +13,25 @@ Bootstrap is a command-line utility that simplifies the execution of Ansible pla
 
 ### Prerequisites
 
-On Debian/Ubuntu systems, ensure you have the necessary packages:
+On Debian/Ubuntu systems, install the necessary packages.
+
+With curl:
+```shell
+apt-get update
+apt-get install -yq --no-install-recommends ca-certificates curl
+```
+
+With wget:
+```shell
+apt-get update
+apt-get install -yq --no-install-recommends ca-certificates wget
+```
+
+### Configure Locales
 
 ```shell
 apt-get update
-apt-get install -yq --no-install-recommends ca-certificates curl locales
-
+apt-get install -yq --no-install-recommends locales
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/default/locale
@@ -26,8 +39,15 @@ echo "LANG=en_US.UTF-8" > /etc/default/locale
 
 ### Install Bootstrap
 
+Using curl:
 ```shell
 curl -fsSLo /usr/local/bin/bootstrap https://github.com/adaptivegears/bootstrap/releases/download/v0.2.4/bootstrap-linux-$(uname -m)
+chmod +x /usr/local/bin/bootstrap
+```
+
+Using wget:
+```shell
+wget -qO /usr/local/bin/bootstrap https://github.com/adaptivegears/bootstrap/releases/download/v0.2.4/bootstrap-linux-$(uname -m)
 chmod +x /usr/local/bin/bootstrap
 ```
 
