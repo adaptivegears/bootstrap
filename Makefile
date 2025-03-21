@@ -13,7 +13,7 @@ PYTHON_VERSION ?= 3.11.11
 
 .PHONY: build
 build: ## Build binary using Docker
-	docker buildx build \
+	docker build \
 		--platform $(PLATFORM_OS)/$(PLATFORM_ARCH) \
 		--build-arg PACKAGE_ARCH=$(PACKAGE_ARCH) \
 		--build-arg PYTHON_RELEASE=$(PYTHON_RELEASE) \
